@@ -1,0 +1,65 @@
+# .NET Core
+*.dll
+*.exe
+*.exe.config
+*.pdb
+*.cache
+*.json
+*.log
+*.swp
+*.suo
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.csproj.user
+*.csproj.nuget.g.props
+*.csproj.nuget.g.targets
+*.csproj.user
+*.dbmdl
+*.bak
+*.tmp
+*.DS_Store
+*.idea/
+
+# ASP.NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# VS Code
+.vscode/
+
+# Rider
+.idea/
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nupkg.*
+*.dotnet/
+packages/
+.nuget/
+
+# Visual Studio
+.vs/
+*.vs/
+*.vscode/
+*.suo
+*.user
+*.userosscache
+*.suo
+*.suo
+*.suo
+*.userprefs
+
+# NUGET
+*.nupkg
+*.snupkg
+
+# JetBrains Rider
+.idea/
+
+# ASP.NET Core
+bin/
+obj/
