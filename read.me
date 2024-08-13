@@ -1,0 +1,75 @@
+Softlab 2024.1 - Projeto Base
+
+* Criar projeto com nom WebApi usando template "ASP.NET Core Web API" / Framework: .NET 8 / Authentication type : none / Use controllers: marcado
+- Seguir a seguinte organização de pastas: 
+- Model : para classes persistidas pelo EF
+- ViewObjects : para classes de troca de dados entre cliente e api http
+- Infra : para contexto, 
+- Migrations : para migrations e seeds
+- Repositories e Repositories/Interfaces, para os repositórios e suas respectivas interfaces
+- em ViewObjects : criar classe CandidatoVo, com propriedades Nome, UrlLinkedin, UrlGitHub
+- criar endpoint [GET] / , deve retornar objeto CandidatoVo preenchido com os dados do candidato.
+- mudar launch para que ao executar a aplicação pelo VS, seja carregado o [GET] /
+- Ponto de checagem: Executar a aplicação, deve ser apresentado a url / , exibindo os dados do candidato através do objeto CandidatoVo
+
+* Preparando Autenticação:
+- Aplicar identity, usando EF 8 e SQL Server
+- Especializar classe IdentityUser, agregando no propriedades: Nome, string , salvando em /Model
+- EF CodeFirst , migrations devem criar o schema inicial e incrementos
+- EF Seed, criar um usuário padrão : candidato@softlabsolucoes.com.br , senha: Senha@Forte#123 , Nome: "Preencher com Seu nome" , Departamento: "Seleção 2024.1"
+- Migrations e Seeds devem ficar em /Infra, sendo executados automaticamente ao iniciar a aplicação
+- Ponto de checagem: Ao executar a aplicação, as tabelas devem ser geradas no banco
+- Ponto de chegacem: O usuário padrão deve existir no banco, tabela AspNetUsers
+
+* Endpoints para Autenticação
+- criar repositorio para autenticar usuário, retornando token JWT
+- AutenticacaoController deve carregar repositorio via Injeção de Dependência 
+- criar endpoint: [POST] /api/autenticacao/autenticar , informando login e senha criado no Seed . Deve retornar 200 e o token JWT
+- Ponto de checagem: se login e senha válido, retornar token JWT, através da classe LoginUsuarioResponse propriedade string Token, com HttpCode 200.
+- Ponto de checagem: se usuario não existir ou senha inválida, retornar HttpCode 401 , { "mensagem" : "Login ou Senha inválidos" }
+
+* Autorização
+- criar Controller UsuariosController, [GET] / , deve devolver a lista dos usuários ativos. O acesso à este controler deve ser autorizado mediante bearer token 
+- Pontos de checagem: Em caso de acesso não autorizado, deve retornar HttpCode 401
+- Pontos de checagem: Ao informar token válido, retorna lista dos usuários 
+
+* Swagger
+- Adicionar documentação da API via Swagger
+- Adicionar versão 1 , titulo: "Softlab - Seleção 2024.1"
+- Adicionar capacidade de informar token no Swagger e assim executar endpoints protegidos pelo próprio Swagger
+- Decorar Endpoints descrevendo os objetos de entrada, saída , descrição, httpCodes previstos para retorno
+- Ponto de checagem: o Swagger deve estar acessível em /swagger/index.html
+- Ponto de checagem: Deve permitir fazer logon, obtendo token. 
+- Ponto de checagem: Deve ser capaz de informar o token no Swagger, permitindo ter acesso aos endpoints protegidos
+- Ponto de chegagem: Ao executar o endpoint de autenticação, o Request Body de exemplo já deve estar preenchido com o login / senha válidos inserido na carga inicial
+- Ponto de checagem: Endpoint /api/Autenticacao e /api/Usuarios devem estar decorados com descrição, HTTP Code de retorno, Objetos de retorno para cada tipo, descritivo do objeto de entrada (se houver)
+
+* Dicas técnicas para a etapa TDD: 
+- Criar um projeto de testes 
+- Utilizar DI para carregar dependências 
+- Usar a classe ServiceCollection para configurar as dependencias. Ao final obter um serviceProvider executando o método BuildServiceProvider. 
+- Usar o serviceProvider para obter, via DI, as dependências desejadas. 
+- Excluir / Criar banco de dados inicial, ao instanciar a classe de teste, garantindo assim que o banco de testes estará vazio antes da execução dos testes
+
+* TDD
+- Novo contexto para negocio BusinessContext, salvo em /Infra 
+- Criar as entidades: Aluno(Id, Nome, DataDeNascimento) / Curso (Id, Descricao, IdadeMinimaEmAnos (nullable) / Matricula (relação entre Aluno e Curso) 
+- Criar Repositório CursoRepositorio.cs (ICursoRepositorio), método Matricular(Aluno, Curso), em /Repositories e /Repositories/Interfaces respectivamente
+- Criar classe de teste unitário TesteCursoRepositorio
+- Criar teste: SeCursoNaoExigeIdadeMinimaPermitirMatricular
+- Criar teste: SeCursoExigeIdadeMinimaSomentePermitirMatricularSeIdadeMinimaAtingida
+- Criar teste: SeAlunoNaoTemIdadeMinimaLancarExcessao
+- Criar teste: SeAlunoJaEstiverMatriculadoNoCursoLancarExcessao
+- Neste momento, seguindo o TDD , os testes devem compilar mas não devem passar 
+- Implementar a regra de negócio: Se o curso exigir idade mínima, verificar se o aluno possui idade suficiente. Se não tiver, lançar ArgumentNullException("Aluno não possui idade mínima para fazer este curso");
+- Executar novamente os testes, que agora devem passar.
+
+* Logger 
+- Criar um Middleware para interceptar as requisicões recebidas e as respostas devolvidas pela API
+- Neste middleware, adicionar ao log informação de rota / body / response
+- Interceptar e logar exceptions
+- Salvar log em arquivo em disco 
+
+* Entrega do projeto:
+- Apenas entregar o projeto, se todos os blocos estiverem atendidos 
+- compactar a pasta contendo o código fonte, sem os binários, enviando por email para wilker@nd.com.br
