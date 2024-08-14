@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Threading.Tasks;
 using WebApi.Repositories;
 
@@ -17,12 +18,15 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(Summary = "Rota de autenticação.")]
+        [SwaggerResponse(200, "Usuário autenticado.")]
+        [SwaggerResponse(401, "Login ou senha inválidos.")]
         public async Task<IActionResult> Autenticar([FromBody] LoginModel model)
         {
             var token = await _authRepo.Authenticate(model.Email, model.Senha);
             if (token == null)
             {
-                return Unauthorized();
+                return Unauthorized("Login ou senha inválidos");
             }
 
             return Ok(new { token });

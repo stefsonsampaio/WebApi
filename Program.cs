@@ -18,6 +18,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "Softlab - Seleção 2024.1",
+        Version = "v1"
+    });
+
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -25,8 +31,12 @@ builder.Services.AddSwaggerGen(options =>
         Type = SecuritySchemeType.ApiKey
     });
 
+    options.ExampleFilters();
     options.OperationFilter<SecurityRequirementsOperationFilter>();
+    options.EnableAnnotations();
 });
+
+builder.Services.AddSwaggerExamplesFromAssemblyOf<UsuarioExampleRequest>();
 
 builder.Services.AddScoped<IAutenticacaoRepository, AutenticacaoRepository>();
 
