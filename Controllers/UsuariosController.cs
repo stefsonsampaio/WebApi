@@ -17,7 +17,7 @@ public class UsuariosController : ControllerBase
         _userManager = userManager;
     }
 
-    [HttpGet("/")]
+    [HttpGet]
     [SwaggerOperation(Summary = "Obtém lista de usuários.")]
     [SwaggerResponse(200, "Lista de usuários.", typeof(IEnumerable<AplicacaoUser>))]
     [SwaggerResponse(401, "Token inválido ou não fornecido.")]

@@ -19,7 +19,7 @@ namespace WebApi.Controllers
 
         [HttpPost]
         [SwaggerOperation(Summary = "Rota de autenticação.")]
-        [SwaggerResponse(200, "Usuário autenticado.")]
+        [SwaggerResponse(200, "Usuário autenticado.", typeof(TokenResponse))]
         [SwaggerResponse(401, "Login ou senha inválidos.")]
         public async Task<IActionResult> Autenticar([FromBody] LoginModel model)
         {
@@ -38,4 +38,9 @@ public class LoginModel
 {
     public string Email { get; set; }
     public string Senha { get; set; }
+}
+
+public class TokenResponse
+{
+    public string Token { get; set; }
 }

@@ -4,7 +4,7 @@ using WebApi.ViewObjects;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("")]
     [ApiController]
     public class CandidatoController : ControllerBase
     {
