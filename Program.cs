@@ -8,6 +8,9 @@ using WebApi.Infra;
 using Microsoft.AspNetCore.Identity;
 using WebApi.Model;
 using WebApi.Repositories;
+using WebApi.Middlewares;
+using System.Net;
+using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,6 +72,21 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnChallenge = context =>
+        {
+            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+            logger.LogWarning("Token inválido ou não fornecido.");
+
+            context.HandleResponse();
+            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            context.Response.ContentType = "application/json";
+            var result = JsonConvert.SerializeObject(new { message = "Token inválido ou não fornecido." });
+            return context.Response.WriteAsync(result);
+        }
+    };
 });
 
 var app = builder.Build();
@@ -79,20 +97,19 @@ using (var scope = app.Services.CreateScope())
     dbContext.Database.Migrate();
 }
 
-    // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseMiddleware<LoggingMiddleware>();
 app.MapControllers();
 
-// Seed database
 await SeedDatabase(app);
 
 app.Run();
