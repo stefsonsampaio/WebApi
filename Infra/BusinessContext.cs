@@ -15,6 +15,20 @@ namespace WebApi.Infra
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Matricula>()
+                .HasKey(m => m.Id);
+
+            modelBuilder.Entity<Matricula>()
+                .HasOne(m => m.Aluno)
+                .WithMany(a => a.Matriculas)
+                .HasForeignKey(m => m.AlunoId);
+
+
+            modelBuilder.Entity<Matricula>()
+                .HasOne(m => m.Curso)
+                .WithMany(c => c.Matriculas)
+                .HasForeignKey(m => m.CursoId);
+
             base.OnModelCreating(modelBuilder);
         }
     }
@@ -24,6 +38,7 @@ namespace WebApi.Infra
         public int Id { get; set; }
         public string Nome { get; set; }
         public DateTime DataNascimento { get; set; }   
+        public ICollection<Matricula> Matriculas { get; set; }
     }
 
     public class Curso
@@ -37,6 +52,7 @@ namespace WebApi.Infra
 
     public class Matricula
     {
+        public int Id { get; set; }
         public int AlunoId { get; set; }
         public Aluno Aluno { get; set; }
         public int CursoId { get; set; }

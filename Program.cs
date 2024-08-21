@@ -44,6 +44,9 @@ builder.Services.AddScoped<IAutenticacaoRepository, AutenticacaoRepository>();
 builder.Services.AddDbContext<ConnectionContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddDbContext<BusinessContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddIdentity<AplicacaoUser, IdentityRole>()
     .AddEntityFrameworkStores<ConnectionContext>()
     .AddDefaultTokenProviders();
