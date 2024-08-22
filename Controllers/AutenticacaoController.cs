@@ -6,7 +6,7 @@ using WebApi.Repositories;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class AutenticacaoController : ControllerBase
     {

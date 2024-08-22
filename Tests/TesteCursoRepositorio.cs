@@ -45,15 +45,21 @@ namespace WebApi.Tests
             var context = _serviceProvider.GetRequiredService<BusinessContext>();
             var repositorio = _serviceProvider.GetRequiredService<ICursoRepositorio>();
 
-            var aluno = new Aluno { Nome = "Aluno Teste", DataNascimento = new DateTime(2001, 11, 18) };
+            var alunoComIdadeAdequada = new Aluno { Nome = "Aluno Maior de Idade", DataNascimento = new DateTime(2000, 11, 18) };
+            var alunoMenorDeIdade = new Aluno { Nome = "Aluno Menor de Idade", DataNascimento = new DateTime(2010, 11, 18) };
             var curso = new Curso { Descricao = "Curso Teste", IdadeMinimaEmAnos = 18 };
 
-            context.Alunos.Add(aluno);
+            context.Alunos.AddRange(alunoComIdadeAdequada, alunoMenorDeIdade);
             context.Cursos.Add(curso);
             await context.SaveChangesAsync();
 
-            Assert.ThrowsAsync<ArgumentException>(async () => await repositorio.Matricular(aluno, curso));
+            // Testa se a matrícula é permitida para aluno com idade adequada
+            Assert.DoesNotThrowAsync(async () => await repositorio.Matricular(alunoComIdadeAdequada, curso));
+
+            // Testa se a matrícula é negada para aluno menor de idade
+            Assert.ThrowsAsync<ArgumentException>(async () => await repositorio.Matricular(alunoMenorDeIdade, curso));
         }
+
 
         [Test]
         public async Task SeAlunoNaoTemIdadeMinimaLancarExcessao()
