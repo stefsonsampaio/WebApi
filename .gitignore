@@ -4,7 +4,6 @@
 *.exe.config
 *.pdb
 *.cache
-*.json
 *.log
 *.swp
 *.suo
