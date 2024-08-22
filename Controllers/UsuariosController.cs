@@ -6,7 +6,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using WebApi.Model;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 [Authorize]
 public class UsuariosController : ControllerBase
 {
@@ -24,6 +24,12 @@ public class UsuariosController : ControllerBase
     public async Task<IActionResult> Get()
     {
         var usuarios = await _userManager.Users.ToListAsync();
+
+        if (usuarios == null || !usuarios.Any())
+        {
+            return BadRequest("Nenhum usuário encontrado.");
+        }
+
         return Ok(usuarios);
     }
 }
