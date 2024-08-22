@@ -80,11 +80,7 @@ builder.Services.AddAuthentication(options =>
             var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
             logger.LogWarning("Token inválido ou não fornecido.");
 
-            context.HandleResponse();
-            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-            context.Response.ContentType = "application/json";
-            var result = JsonConvert.SerializeObject(new { message = "Token inválido ou não fornecido." });
-            return context.Response.WriteAsync(result);
+            return Task.CompletedTask;
         }
     };
 });
@@ -100,7 +96,11 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Softlab - Selleção 2024.1 v1");
+        c.RoutePrefix = "swagger";
+    });
 }
 
 app.UseHttpsRedirection();

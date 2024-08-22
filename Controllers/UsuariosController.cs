@@ -6,7 +6,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using WebApi.Model;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 [Authorize]
 public class UsuariosController : ControllerBase
 {
