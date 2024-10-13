@@ -23,7 +23,7 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
     {
-        Title = "Softlab - Seleção 2024.1",
+        Title = "AspNet WebApi",
         Version = "v1"
     });
 
